@@ -1,20 +1,29 @@
-//
-//  Phone_CleanerApp.swift
-//  Phone Cleaner
-//
-//  Created by Nikita on 30.11.2025.
-//
-
 import SwiftUI
 
 @main
 struct Phone_CleanerApp: App {
-    let persistenceController = PersistenceController.shared
-
+    @StateObject private var appState = AppState.shared
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            RootView()
+                .preferredColorScheme(.dark)
         }
+    }
+}
+
+/// Root View - определяет какой экран показывать
+struct RootView: View {
+    @StateObject private var appState = AppState.shared
+    
+    var body: some View {
+        Group {
+            if appState.showOnboarding {
+                OnboardingView()
+            } else {
+                MainTabView()
+            }
+        }
+        .animation(.easeInOut(duration: 0.3), value: appState.showOnboarding)
     }
 }
